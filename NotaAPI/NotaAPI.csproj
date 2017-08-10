@@ -117,8 +117,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="d.html" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="index.html" />
+    <Content Include="service-worker.js" />
+    <Content Include="static\css\main.1846ceb2.css" />
+    <Content Include="static\css\main.e7a049ad.css" />
+    <Content Include="static\js\main.df90d225.js" />
+    <Content Include="static\js\main.ee600001.js" />
+    <Content Include="static\js\main.fbd68dab.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -139,6 +146,15 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="manifest.json" />
+    <Content Include="asset-manifest.json" />
+    <None Include="Properties\PublishProfiles\notaMainSIte - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\notaMainSIte - Web Deploy.pubxml" />
+    <Content Include="static\css\main.1846ceb2.css.map" />
+    <Content Include="static\css\main.e7a049ad.css.map" />
+    <Content Include="static\js\main.df90d225.js.map" />
+    <Content Include="static\js\main.ee600001.js.map" />
+    <Content Include="static\js\main.fbd68dab.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -178,6 +194,8 @@
           <DevelopmentServerPort>60665</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:60665/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost:60665/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
