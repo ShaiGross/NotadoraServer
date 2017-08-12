@@ -13,7 +13,7 @@ namespace NotaAPI.Controllers
     public class PersonsController : ApiController
     {
         [Route("")]
-        public Dictionary<int, PersonInfo> GetPersons()
+        public List<PersonInfo> GetPersons()
         {
             return DataAccess.GetPersons();
         }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-//using System.Web.Http.Cors;
+using System.Web.Http.Cors;
 
 namespace NotaAPI
 {
@@ -13,9 +13,16 @@ namespace NotaAPI
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            //var cors = new EnableCorsAttribute("*", "*", "*");
-            // Web API configuration and services
-            //config.EnableCors(cors);
+            var allowCorsSetting = System.Configuration.ConfigurationManager.AppSettings["allowCors"];
+            bool allowCORS = false;
+
+            bool.TryParse(allowCorsSetting, out allowCORS);
+
+            if (allowCORS)
+            {
+                var cors = new EnableCorsAttribute("*", "*", "*");
+                config.EnableCors(cors);
+            }
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

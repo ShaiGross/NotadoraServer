@@ -95,9 +95,9 @@ namespace NotaBL
             return conjugationRules;
         }
 
-        public static Dictionary<int, PersonInfo> GetPersons()
+        public static List<PersonInfo> GetPersons()
         {
-            var persons = new Dictionary<int, PersonInfo>();
+            var persons = new List<PersonInfo>();
 
             using (var context = new NotaContextAcces())
             {
@@ -113,7 +113,7 @@ namespace NotaBL
                                               dbPerson.Formality,
                                               dbPerson.Gender,
                                               dbPerson.Order);
-                    persons.Add(dbPerson.Id, person);
+                    persons.Add(person);
                 }
             }
 
