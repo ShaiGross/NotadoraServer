@@ -34,19 +34,19 @@ namespace APIModels
 
         #region Ctor
 
-        public TenseInfo(int id,
-                         string name,
-                         string desc,
-                         int regularConjRuleId,
-                         List<int> irregularConjRulesIds,
-                         List<int> personsIds)
+        public TenseInfo(int id
+                         ,string name
+                         ,string desc
+                         ,int regularConjRuleId
+                         //,List<int> irregularConjRulesIds
+                         /*,List<int> personsIds*/)
         {
             this.id = id;
             this.name = name;
             this.description = desc;
             this.rugularConjugationRuleId = regularConjRuleId;
-            this.irregularConjugationRulesIds = irregularConjRulesIds;
-            this.personsIds = personsIds;            
+            //this.irregularConjugationRulesIds = irregularConjRulesIds;
+            //this.personsIds = personsIds;            
         }
 
         #endregion

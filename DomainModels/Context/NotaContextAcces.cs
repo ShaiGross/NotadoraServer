@@ -86,6 +86,22 @@ namespace NotaDAL.Context
             return tense.IrregularConjugationRules;
         }
 
+        public Dictionary<int, List<int>> GetAllTensePersonsIds(List<int> tenseIds)
+        {
+            var tensesPersonsIds = new Dictionary<int, List<int>>();
+
+            foreach (var tenseId in tenseIds)
+            {
+                var personIds = context.TensePersons
+                                       .Where(tp => tp.TenseId == tenseId)
+                                       .Select(tp => tp.PersonId).ToList();
+                tensesPersonsIds.Add(tenseId, personIds);
+
+            }
+
+            return tensesPersonsIds;
+        }
+
         public List<int> GetConjugationRuleVerbsIds(ConjugationRule conjugationRule)
         {
             var query = from verb

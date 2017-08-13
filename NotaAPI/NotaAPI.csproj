@@ -126,11 +126,14 @@
     <Content Include="service-worker.js" />
     <Content Include="static\css\main.1846ceb2.css" />
     <Content Include="static\css\main.1846ceb2.css.map" />
+    <Content Include="static\css\main.b758086c.css" />
     <Content Include="static\css\main.e7a049ad.css" />
     <Content Include="static\css\main.e7a049ad.css.map" />
+    <Content Include="static\js\main.634a501c.js" />
     <Content Include="static\js\main.6d6e250e.js" />
     <Content Include="static\js\main.6d6e250e.js.map" />
     <Content Include="static\js\main.8ded3c81.js" />
+    <Content Include="static\js\main.8ded3c81.js.map" />
     <Content Include="static\js\main.df90d225.js" />
     <Content Include="static\js\main.df90d225.js.map" />
     <Content Include="static\js\main.ee600001.js" />
@@ -158,7 +161,8 @@
     </Content>
     <None Include="Properties\PublishProfiles\notaMainSIte - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\notaMainSIte - Web Deploy.pubxml" />
-    <Content Include="static\js\main.8ded3c81.js.map" />
+    <Content Include="static\css\main.b758086c.css.map" />
+    <Content Include="static\js\main.634a501c.js.map" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

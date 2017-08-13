@@ -30,7 +30,7 @@ namespace NotaConjugator
         #region Methods
 
         public ConjugationIndex ConjugatePerson(int tenseId, int verbId, int personId)
-        {
+        {            
             bool conjugaitonPackageSuccess = buildConjugationPackage(tenseId, verbId, personId);
 
             if (!conjugaitonPackageSuccess)
@@ -84,18 +84,24 @@ namespace NotaConjugator
             if (enabledTensesOnly)
                 tenses = tenses.Where(t => t.Enabled).ToList();
 
-            var tensesIds = tenses.Select(t => t.Id);
+            var tensesIds = tenses.Select(t => t.Id).ToList();
+            var _lock = new Object();
+            Dictionary<int, List<int>> tensesPersonsIds = context.GetAllTensePersonsIds(tensesIds);            
 
-            foreach (var tenseId in tensesIds)
+            Parallel.ForEach(tensesPersonsIds, tensePersonId =>
             {
-                var tensePersonIds = context.GetAllTensePersons(tenseId).Select(p => p.Id);
 
-                foreach (var personId in tensePersonIds)
+                var tenseId = tensePersonId.Key;
+                var personsIds = tensePersonId.Value;
+
+                Parallel.ForEach(personsIds, personId =>
                 {
-                    bool conjugaitonPackageSuccess = buildConjugationPackage(tenseId, verbId, personId);
+                    bool conjugaitonPackageSuccess;                    
+                    conjugaitonPackageSuccess = buildConjugationPackageSafe(tenseId, verbId, personId, _lock);
+                    
 
                     if (!conjugaitonPackageSuccess)
-                        continue;
+                        return;
 
                     var conjugationString = Conjugate();
 
@@ -108,8 +114,8 @@ namespace NotaConjugator
                     };
 
                     tenseConjugaitonIndexes.Add(conjugation);
-                }                
-            }
+                });
+            });
 
             return tenseConjugaitonIndexes;
         }
@@ -136,22 +142,74 @@ namespace NotaConjugator
 
         private bool buildConjugationPackage(int tenseId, int verbId, int personId)
         {
-            var verb = context.GetItem<Verb>(verbId);
+            var verb = context.GetItem<Verb>(verbId);            
 
             if (verb == null)
                 return false;
 
+            
             var conjugationMatch = context.getConjugationMatch(tenseId, verbId, personId);
+            
 
             if (conjugationMatch == null)
                 return false;
 
-            var conjugationRule = context.getConjugationMatchConjugationRule(conjugationMatch);
+            var conjugationRule = context.getConjugationMatchConjugationRule(conjugationMatch);            
+
+            if (conjugationRule == null)
+                return false;
+            
+            var instruction = context.GetConjugationInstruction(verb, conjugationRule.Id, personId);            
+
+            if (instruction == null)
+                return false;
+
+            conjugationPackage = new ConjugationPackage
+            {
+                Verb = verb,
+                ConjugationMatch = conjugationMatch,
+                ConjugationRule = conjugationRule,
+                Instruction = instruction
+            };
+
+            return true;
+        }
+
+        private bool buildConjugationPackageSafe(int tenseId, int verbId, int personId, object _lock)
+        {
+            Verb verb;
+            lock (_lock)
+            {
+                verb = context.GetItem<Verb>(verbId);
+            }
+
+            if (verb == null)
+                return false;
+
+            ConjugationMatch conjugationMatch;
+            lock (_lock)
+            {
+                conjugationMatch = context.getConjugationMatch(tenseId, verbId, personId);
+            }
+
+            if (conjugationMatch == null)
+                return false;
+
+            ConjugationRule conjugationRule;
+            lock (_lock)
+            {
+                conjugationRule = context.getConjugationMatchConjugationRule(conjugationMatch);
+            }
 
             if (conjugationRule == null)
                 return false;
 
-            var instruction = context.GetConjugationInstruction(verb, conjugationRule.Id, personId);
+            ConjugationRulesInstruction instruction;
+
+            lock (_lock)
+            {
+                instruction = context.GetConjugationInstruction(verb, conjugationRule.Id, personId);
+            }
 
             if (instruction == null)
                 return false;

@@ -44,15 +44,15 @@ namespace APIModels
 
         #region Ctor
 
-        public ConjugationRuleInfo(int id,
-                                   string name,
-                                   string desc,
-                                   int tenseId,
-                                   bool regular,
-                                   ConjugationRuleType type,
-                                   int? patternIndex,                        
-                                   List<int> personsIds,
-                                   List<int> verbIds)
+        public ConjugationRuleInfo(int id
+                                   ,string name
+                                   ,string desc
+                                   ,int tenseId
+                                   ,bool regular
+                                   ,ConjugationRuleType type
+                                   ,int? patternIndex
+                                   /*,List<int> personsIds*/
+                                   /*,List<int> verbIds*/)
         {
             this.id = id;
             this.name = name;
@@ -61,8 +61,8 @@ namespace APIModels
             this.isRegular = regular;
             this.type = type;
             this.patternIndex = patternIndex;
-            this.personsIds = personsIds;
-            this.verbsIds = verbIds;
+            //this.personsIds = personsIds;
+            //this.verbsIds = verbIds;
         }
 
         #endregion
