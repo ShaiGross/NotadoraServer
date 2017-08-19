@@ -48,6 +48,21 @@ namespace NotaDAL.Context
             return allTenseConjugationRules;
         }
 
+        public Dictionary<int, List<int>> GetAllVerbsConjugationRulesIds()
+        {
+            Dictionary<int, List<int>> allVerbConjugationRulesIds = new Dictionary<int, List<int>>();
+
+            context.ConjugationMatches.ToList().ForEach(cm => 
+            {
+                if (allVerbConjugationRulesIds.ContainsKey(cm.VerbId))
+                    allVerbConjugationRulesIds[cm.VerbId].Add(cm.ConjugationRuleId);
+                else
+                    allVerbConjugationRulesIds.Add(cm.VerbId, new List<int> { cm.ConjugationRuleId });
+            });
+
+            return allVerbConjugationRulesIds;
+        }
+
         public List<int> GetVerbConjugationRulesIds(Verb dbVerb)
         {
             var query = from rule

@@ -22,14 +22,35 @@ namespace NotaBL
 
             using (var context = new NotaContextAcces())
             {
+                Dictionary<int, List<int>> allVerbsConjugationRulesIds = null;
+
+
+                if (!conjugate)
+                    allVerbsConjugationRulesIds = context.GetAllVerbsConjugationRulesIds();
+
                 var dbVerbs = context.GetItemList<Verb>();
 
                 foreach (var dbVerb in dbVerbs)
                 {
+                    List<int> conjugationRulesIds = null;
+
+
                     if (!conjugate)
-                        verb = new VerbInfo(dbVerb.Id, dbVerb.Description, dbVerb.Infinative, dbVerb.EnglishInfinative);
+                    {
+                        if (allVerbsConjugationRulesIds.ContainsKey(dbVerb.Id))
+                            conjugationRulesIds = allVerbsConjugationRulesIds[dbVerb.Id];
+
+                        verb = new VerbInfo(dbVerb.Id
+                                            , dbVerb.Description
+                                            , dbVerb.Infinative
+                                            , dbVerb.EnglishInfinative
+                                            , null
+                                            , conjugationRulesIds);
+                    }
                     else
+                    {
                         verb = createVerbWithConjugations(dbVerb, context);
+                    }
 
                     verbs.Add(verb);
                 }
@@ -79,12 +100,12 @@ namespace NotaBL
                     //var conjugationRulesVerbsIds = context.GetConjugationRuleVerbsIds(dbConjugationRule);
 
                     var conjugationRule = new ConjugationRuleInfo(dbConjugationRule.Id
-                                                                  ,dbConjugationRule.Name
-                                                                  ,dbConjugationRule.Description
-                                                                  ,dbConjugationRule.TenseId
-                                                                  ,dbConjugationRule.IsRegular
-                                                                  ,dbConjugationRule.Type
-                                                                  ,dbConjugationRule.PatternIndex
+                                                                  , dbConjugationRule.Name
+                                                                  , dbConjugationRule.Description
+                                                                  , dbConjugationRule.TenseId
+                                                                  , dbConjugationRule.IsRegular
+                                                                  , dbConjugationRule.Type
+                                                                  , dbConjugationRule.PatternIndex
                                                                   //,conjugationRulePersonsIds
                                                                   /*conjugationRulesVerbsIds*/);
 
@@ -139,9 +160,9 @@ namespace NotaBL
                     //                             .ToList();
 
                     var tense = new TenseInfo(dbTense.Id
-                                              ,dbTense.Name
-                                              ,dbTense.Description
-                                              ,dbTense.RugularConjugationRuleId
+                                              , dbTense.Name
+                                              , dbTense.Description
+                                              , dbTense.RugularConjugationRuleId
                                               //,irregularConjugationRulesIds
                                               /*,tensePersonsIds*/);
                     tenses.Add(tense);
@@ -166,7 +187,7 @@ namespace NotaBL
                 var tenseId = conjugationIndex.TenseId;
                 var conjugation = conjugationIndex.conjugationString;
 
-                var verbConjugation = new VerbConjugations(tenseId, 
+                var verbConjugation = new VerbConjugations(tenseId,
                                                            personId,
                                                            conjugation);
                 verbConjugations.Add(verbConjugation);
