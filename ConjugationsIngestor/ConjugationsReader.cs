@@ -20,6 +20,9 @@ namespace ConjugationsIngestor
 
         public static string DownloadConjugationsHTML(string Infinative)
         {
+            if (string.IsNullOrEmpty(Infinative))
+                return null;
+
             var baseUrl = ConfigurationManager.AppSettings[CONJUGATIONS_URL_APP_KEY];
             var verbUrl = $"{baseUrl}/{Infinative}";
             string html;

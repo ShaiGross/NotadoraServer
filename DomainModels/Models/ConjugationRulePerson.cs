@@ -27,5 +27,10 @@ namespace NotaDAL.Models
         {
             throw new NotImplementedException();
         }
+
+        public void Copy(ConjugationRulePerson other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -84,6 +84,11 @@ namespace NotaDAL.Models
             return (this.Infinative == other.Infinative);
         }
 
+        public void Copy(Verb other)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

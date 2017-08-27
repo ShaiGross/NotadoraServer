@@ -94,6 +94,11 @@ namespace NotaDAL.Models
             throw new NotImplementedException();
         }
 
+        public void Copy(Person other)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

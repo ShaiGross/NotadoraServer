@@ -29,7 +29,7 @@ namespace APIModels
         private bool isRegular;
 
         [DataMember]
-        private ConjugationRuleType type;
+        private ConjugationRuleType conjugationRuleType;
 
         [DataMember]
         private int? patternIndex;
@@ -51,18 +51,37 @@ namespace APIModels
                                    ,bool regular
                                    ,ConjugationRuleType type
                                    ,int? patternIndex
-                                   /*,List<int> personsIds*/
-                                   /*,List<int> verbIds*/)
+                                   ,List<int> personsIds = null
+                                   ,List<int> verbIds = null)
         {
             this.id = id;
             this.name = name;
             this.description = desc;
             this.tenseId = tenseId;
             this.isRegular = regular;
-            this.type = type;
+            this.conjugationRuleType = type;
             this.patternIndex = patternIndex;
-            //this.personsIds = personsIds;
-            //this.verbsIds = verbIds;
+            this.personsIds = personsIds;
+            this.verbsIds = verbIds;
+        }
+
+        #endregion
+
+        #region Methods
+
+        public ConjugationRule ToDbType() // TODO: this should be interface
+        {
+            return new ConjugationRule
+            {
+                Id = this.id
+                ,Description = this.description
+                ,IsRegular = this.isRegular
+                ,Name = this.name
+                ,PatternIndex = this.patternIndex
+                ,PersonCount = this.personsIds.Count
+                ,TenseId = this.tenseId
+                ,Type = this.conjugationRuleType
+            };
         }
 
         #endregion

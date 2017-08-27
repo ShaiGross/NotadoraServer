@@ -38,6 +38,11 @@ namespace NotaDAL.Models
                    (this.PersonId == other.PersonId); 
         }
 
+        public void Copy(ConjugationMatch other)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

@@ -31,7 +31,7 @@ namespace NotaConjugator
 
         public ConjugationIndex ConjugatePerson(int tenseId, int verbId, int personId)
         {            
-            bool conjugaitonPackageSuccess = buildConjugationPackage(tenseId, verbId, personId);
+            bool conjugaitonPackageSuccess = BuildConjugationPackage(tenseId, verbId, personId);
 
             if (!conjugaitonPackageSuccess)
                 return null;
@@ -54,7 +54,7 @@ namespace NotaConjugator
 
             foreach (var personId in tensePersonIds)
             {
-                bool conjugaitonPackageSuccess = buildConjugationPackage(tenseId, verbId, personId);
+                bool conjugaitonPackageSuccess = BuildConjugationPackage(tenseId, verbId, personId);
 
                 if (!conjugaitonPackageSuccess)
                     continue;
@@ -97,7 +97,7 @@ namespace NotaConjugator
                 Parallel.ForEach(personsIds, personId =>
                 {
                     bool conjugaitonPackageSuccess;                    
-                    conjugaitonPackageSuccess = buildConjugationPackageSafe(tenseId, verbId, personId, _lock);
+                    conjugaitonPackageSuccess = BuildConjugationPackageSafe(tenseId, verbId, personId, _lock);
                     
 
                     if (!conjugaitonPackageSuccess)
@@ -140,7 +140,7 @@ namespace NotaConjugator
             }            
         }
 
-        private bool buildConjugationPackage(int tenseId, int verbId, int personId)
+        private bool BuildConjugationPackage(int tenseId, int verbId, int personId)
         {
             var verb = context.GetItem<Verb>(verbId);            
 
@@ -175,7 +175,7 @@ namespace NotaConjugator
             return true;
         }
 
-        private bool buildConjugationPackageSafe(int tenseId, int verbId, int personId, object _lock)
+        private bool BuildConjugationPackageSafe(int tenseId, int verbId, int personId, object _lock)
         {
             Verb verb;
             lock (_lock)

@@ -54,10 +54,15 @@ namespace NotaDAL.Context
 
             context.ConjugationMatches.ToList().ForEach(cm => 
             {
-                if (allVerbConjugationRulesIds.ContainsKey(cm.VerbId))
+                if (!allVerbConjugationRulesIds.ContainsKey(cm.VerbId))
+                {
+                    allVerbConjugationRulesIds.Add(cm.VerbId, 
+                                                   new List<int> { cm.ConjugationRuleId });
+                }
+                else if (!allVerbConjugationRulesIds[cm.VerbId].Contains(cm.ConjugationRuleId))
+                {
                     allVerbConjugationRulesIds[cm.VerbId].Add(cm.ConjugationRuleId);
-                else
-                    allVerbConjugationRulesIds.Add(cm.VerbId, new List<int> { cm.ConjugationRuleId });
+                }
             });
 
             return allVerbConjugationRulesIds;
@@ -247,6 +252,28 @@ namespace NotaDAL.Context
             }
 
             return item;
+        }
+
+        public T UpdateItem<T>(T updatedItem) where T : NotaDbObject<T>
+        {
+            var dbItem = GetItem<T>(updatedItem.Id);
+
+            if (dbItem == null)
+                return default(T);
+
+            dbItem.Copy(updatedItem);
+
+            try
+            {
+                context.SubmitChanges();
+                return dbItem;
+            }
+            catch
+            {
+                dbItem = default(T);
+            }
+
+            return dbItem;            
         }
 
         public ConjugationMatch CreateConjugationMatch(int VerbId, int conjugationRuleId, int? personId, string ConjugationString)

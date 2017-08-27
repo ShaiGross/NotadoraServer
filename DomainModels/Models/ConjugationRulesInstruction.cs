@@ -36,6 +36,11 @@ namespace NotaDAL.Models
             throw new NotImplementedException();
         }
 
+        public void Copy(ConjugationRulesInstruction other)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

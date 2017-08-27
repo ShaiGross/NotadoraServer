@@ -10,5 +10,7 @@ namespace NotaDAL
     {
         int Id { get; set; }
         bool DbCompare(T other);
+
+        void Copy(T other);
     }
 }

@@ -58,6 +58,10 @@ namespace NotaDAL.Models
             throw new NotImplementedException();
         }
 
+        public void Copy(Tense other)
+        {
+
+        }
         #endregion
 
         #region Icomparable Implementation

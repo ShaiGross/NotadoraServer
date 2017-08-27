@@ -48,6 +48,10 @@
       <Project>{918a7ccb-2d7f-4097-b5b5-f683e286cb9a}</Project>
       <Name>APIModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConjugationsIngestor\ConjugationsIngestor.csproj">
+      <Project>{4667E858-21FE-413B-BC1C-9DFCD945EEDF}</Project>
+      <Name>ConjugationsIngestor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DomainModels\NotaDAL.csproj">
       <Project>{1FF30086-A296-4061-A185-187A1C22585F}</Project>
       <Name>NotaDAL</Name>

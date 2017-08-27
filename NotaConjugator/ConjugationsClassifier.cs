@@ -37,7 +37,7 @@ namespace NotaConjugator
         public void ClassifyVerbConjugators(Verb verb, Dictionary<Tense, List<string>> tensesConjugations)
         {
             this.verb = verb;
-            sortTensesConjugations(ref tensesConjugations);
+            SortTensesConjugations(ref tensesConjugations);
 
             foreach (var tenseConjugations in tensesConjugations)
             {
@@ -54,7 +54,7 @@ namespace NotaConjugator
             }
         }
 
-        private void sortTensesConjugations(ref Dictionary<Tense, List<string>> tensesConjugations)
+        private void SortTensesConjugations(ref Dictionary<Tense, List<string>> tensesConjugations)
         {
             var sortedTenses = tensesConjugations.Keys.ToList();
             sortedTenses.Sort();
@@ -139,9 +139,9 @@ namespace NotaConjugator
             foreach (var person in persons)
             {
                 var personIndex = person.Index;
-                var conjugation = conjugations[personIndex];
+                var conjugation = conjugations[personIndex].ToLower();
                 var instruction = instructions.FirstOrDefault(i => i.PersonId == person.Id);
-                var suffix = instruction.Suffix;
+                var suffix = instruction.Suffix.ToLower();
 
                 if (!conjugation.DiacriticsEndsWith(suffix))
                     return false;
@@ -235,7 +235,7 @@ namespace NotaConjugator
             else if (oldPattern != newPattern)
                 return false;
 
-            var expectedPattern = ConjugationUtils.getConjugationMatchPattern(verb, conjugationRule);
+            var expectedPattern = ConjugationUtils.getConjugationMatchPattern(verb, conjugationRule).ToLower();
             var independentPattern = (newPattern == expectedPattern);
 
             switch (conjugationRule.Type)

@@ -23,5 +23,12 @@ namespace NotaAPI.Controllers
         {
             return DataAccess.GetVerbById(id);
         }
+
+        [Route("{spanishInfinative}")]
+        [HttpGet]
+        public VerbInfo AddNewVerb(string spanishInfinative)
+        {
+            return DataAccess.AddNewVerb(spanishInfinative);
+        }
     }
 }

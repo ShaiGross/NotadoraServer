@@ -18,24 +18,24 @@ namespace ConjugationsIngestor
 
         #region Methods
 
-        public Dictionary<Tense, List<string>> parseHtml(ref string html,
+        public Dictionary<Tense, List<string>> ParseHTML(ref string html,
                                                          out string englishInf,
                                                          out string presentParticiple,
                                                          out string pastParticiple,                                                         
                                                          List<Tense> allTenses)
         {
-            englishInf = parseEnglishInfinative(ref html);
-            presentParticiple = parsePresentParticiple(ref html);
-            pastParticiple = parsePastParticiple(ref html);
+            englishInf = ParseEnglishInfinative(ref html);
+            presentParticiple = ParsePresentParticiple(ref html);
+            pastParticiple = ParsePastParticiple(ref html);
             
-            var tensesConjugations = sortTenseList(allTenses, pastParticiple, presentParticiple);
+            var tensesConjugations = SortTenseList(allTenses, pastParticiple, presentParticiple);
 
-            parseTenses(html, tensesConjugations);            
+            ParseTenses(html, tensesConjugations);            
 
             return tensesConjugations;
         }
 
-        private string parseEnglishInfinative(ref string html)
+        private string ParseEnglishInfinative(ref string html)
         {
             var englishInfLeftIdentifier = "<div class=\"el\">";
             var englishInfRightIdentifier = "</div>";
@@ -66,7 +66,7 @@ namespace ConjugationsIngestor
             return englishInf.TrimEnd();
         }
 
-        private Dictionary<Tense, List<string>> sortTenseList(List<Tense> unsortedTenses,
+        private Dictionary<Tense, List<string>> SortTenseList(List<Tense> unsortedTenses,
                                                               string pastParticiple,
                                                               string presentParticiple)
         {
@@ -114,46 +114,49 @@ namespace ConjugationsIngestor
             return sortedTenses;
         }
 
-        private static string parsePresentParticiple(ref string html)
+        private static string ParsePresentParticiple(ref string html)
         {
-            var gerundElement = "Gerund:</a>";
-            var gerundIndex = html.IndexOf(gerundElement);
-            html = html.Remove(0, gerundIndex + gerundElement.Length);
-
-            var presentParticipleLeft = html.IndexOf("<span>") + "<span>&nbsp;".Length;
+            var presentParticipleElement = "Present Participle:</a>";
+            var presentParticipleLabelIndex = html.IndexOf(presentParticipleElement);
+            html = html.Remove(0, presentParticipleLabelIndex + presentParticipleElement.Length);
+            
+            var presentParticipleLeftBorder = "\"conj-basic-word\">";
+            var presentParticipleLeft = html.IndexOf(presentParticipleLeftBorder) + presentParticipleLeftBorder.Length;
             html = html.Remove(0, presentParticipleLeft);
-            var presentParticipleRight = html.IndexOf("</span>");
+            var presentParticipleRightBorder = html.IndexOf("</span>");
 
-            var presentParticiple = html.Substring(0, presentParticipleRight);
+            var presentParticiple = html.Substring(0, presentParticipleRightBorder);
 
             if (presentParticiple.Contains(','))
                 presentParticiple = presentParticiple.Remove(presentParticiple.IndexOf(','));
 
-            fixAccentedLatters(ref presentParticiple);
+            FixAccentedLatters(ref presentParticiple);
 
             return presentParticiple;
         }
 
-        private static string parsePastParticiple(ref string html)
-        {
+        private static string ParsePastParticiple(ref string html)
+        {            
             var participleElement = "Participle:</a>";
             var gerundIndex = html.IndexOf(participleElement);
             html = html.Remove(0, gerundIndex + participleElement.Length);
 
-            var pastParticipleLeft = html.IndexOf("<span>") + "<span>&nbsp;".Length;
+            var pastParticipleLeftBorder = "\"conj-basic-word\">";
+            var pastParticipleLeft = html.IndexOf(pastParticipleLeftBorder) + pastParticipleLeftBorder.Length;
+            html = html.Substring(pastParticipleLeft);
             var pastParticipleRigth = html.IndexOf("</span>");
 
-            var pastParticiple = html.Substring(pastParticipleLeft, pastParticipleRigth - pastParticipleLeft);
+            var pastParticiple = html.Substring(0, pastParticipleRigth);
 
             if (pastParticiple.Contains(','))
                 pastParticiple = pastParticiple.Remove(pastParticiple.IndexOf(','));
 
-            fixAccentedLatters(ref pastParticiple);
+            FixAccentedLatters(ref pastParticiple);
 
             return pastParticiple;
         }
 
-        private static void parseTenses(string html, Dictionary<Tense, List<string>> tensesConjugations)
+        private static void ParseTenses(string html, Dictionary<Tense, List<string>> tensesConjugations)
         {
             // TODO: Fix this into config libreary
             var maxPersonPerTenses = int.Parse(ConfigurationManager.AppSettings[MAX_PERSON_PER_TENSE_APP_KEY]);
@@ -169,26 +172,31 @@ namespace ConjugationsIngestor
 
             for (int trIndex = 0; trIndex < maxPersonPerTenses; trIndex++)
             {
-                var firstTdLeft = html.IndexOf("<td");
-                var firstTdRight = html.IndexOf("</td>") + "</td>".Length;
-                html = html.Remove(firstTdLeft, firstTdRight - firstTdLeft);
+                var conjugationWrapperLeftBorder = "<divdata-toggle=\"tooltip\"";
+                var conjugationWrapperLeft = html.IndexOf(conjugationWrapperLeftBorder);
+                      
+                html = html.Remove(0, conjugationWrapperLeft);
                 html = html.Replace("<spanclass='conj-irregular'>", "").Replace("</span>", "");                
 
                 for (int tenseIndex = 0; tenseIndex < tenses.Count; tenseIndex++)
                 {
                     var currTense = tenses[tenseIndex];
                     var tdLeft = html.IndexOf("\">") + "\">".Length;
-                    var tdRight = html.IndexOf("</td>");
+                    var tdRight = html.IndexOf("</div>");
                     var conjugatedGrammPerson = html.Substring(tdLeft, tdRight - tdLeft);
+                    html = html.Substring(tdRight);
 
                     if (conjugatedGrammPerson.Contains('>'))
                         conjugatedGrammPerson = conjugatedGrammPerson.Substring(conjugatedGrammPerson.IndexOf('>') + 1);
 
                     conjugatedGrammPerson = conjugatedGrammPerson.Trim();
-                    fixAccentedLatters(ref conjugatedGrammPerson);
+                    FixAccentedLatters(ref conjugatedGrammPerson);
 
                     if (tenseIndex + 1 != tenses.Count || trIndex != 5)
-                        html = html.Remove(tdLeft, tdRight - tdLeft + "<tdclass=\"vtable-word\"></td>".Length);
+                    {                        
+                        conjugationWrapperLeft = html.IndexOf(conjugationWrapperLeftBorder);
+                        html = html.Remove(0, conjugationWrapperLeft);
+                    }
 
                     tensesConjugations[currTense].Add(conjugatedGrammPerson);
                 }
@@ -200,7 +208,7 @@ namespace ConjugationsIngestor
             }
         }
 
-        private static void fixAccentedLatters(ref string word)
+        private static void FixAccentedLatters(ref string word)
         {
             word = (word.Replace("Ã¡", "á").
                          Replace("Ã©", "é").

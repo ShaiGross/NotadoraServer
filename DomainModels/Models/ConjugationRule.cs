@@ -73,6 +73,19 @@ namespace NotaDAL.Models
             throw new NotImplementedException();
         }
 
+        public void Copy(ConjugationRule other)
+        {
+            this.Id = other.Id;
+            this.Name = other.Name;
+            this.Description = other.Description;
+            this.TenseId = other.TenseId;
+            this.IsRegular = other.IsRegular;
+            this.Type = other.Type;
+            this.PersonCount = other.PersonCount;
+            this.PatternIndex = other.PatternIndex;
+            this.Persons = other.Persons;
+        }
+
         #endregion
 
         #region IComparable Implementation

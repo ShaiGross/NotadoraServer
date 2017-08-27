@@ -30,6 +30,11 @@ namespace NotaDAL.Models
             throw new NotImplementedException();
         }
 
+        public void Copy(TensePerson other)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
