@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConjugationMatchInfo.cs" />
     <Compile Include="ConjugationRuleInfo.cs" />
+    <Compile Include="InstructionInfo.cs" />
     <Compile Include="PersonInfo.cs" />
     <Compile Include="TenseInfo.cs" />
     <Compile Include="VerbInfo.cs" />

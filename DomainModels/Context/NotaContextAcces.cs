@@ -170,7 +170,7 @@ namespace NotaDAL.Context
             return conjugationRule.Persons;
         }
 
-        public ConjugationMatch getConjugationMatch(int tenseId,
+        public ConjugationMatch GetConjugationMatch(int tenseId,
                                                     int verbId,
                                                     int personId)
         {
@@ -191,12 +191,63 @@ namespace NotaDAL.Context
             return query.FirstOrDefault();
         }
 
-        public ConjugationRule getConjugationMatchConjugationRule(ConjugationMatch conjugationMatch)
+        public ConjugationRule GetConjugationMatchConjugationRule(ConjugationMatch conjugationMatch)
         {
             if (conjugationMatch.ConjugationRule == null)
                 conjugationMatch.ConjugationRule = GetItem<ConjugationRule>(conjugationMatch.ConjugationRuleId);
 
             return conjugationMatch.ConjugationRule;
+        }
+
+        public Dictionary<int, List<int>> GetAllConjugationRulePersonIds()
+        {
+            var allConjugationRulesPersons = new Dictionary<int, List<int>>();
+
+            var conjugationRulePersons = GetItemList<ConjugationRulePerson>();
+
+            foreach (var conjugationRulePerson in conjugationRulePersons)
+            {
+                var conjugaitonRuleId = conjugationRulePerson.ConjugationRuleId;
+                var personId = conjugationRulePerson.PersonId;
+
+                if (allConjugationRulesPersons.ContainsKey(conjugaitonRuleId))
+                    allConjugationRulesPersons[conjugaitonRuleId].Add(personId);
+                else
+                    allConjugationRulesPersons.Add(conjugaitonRuleId, new List<int> { personId });
+            }
+
+            return allConjugationRulesPersons;
+        }
+
+        public ConjugationMatch CreateConjugationMatch(int VerbId, int conjugationRuleId, int? personId, string ConjugationString)
+        {
+            return new ConjugationMatch
+            {
+                VerbId = VerbId,
+                ConjugationRuleId = conjugationRuleId,
+                PersonId = personId,
+                ConjugationString = ConjugationString
+            };
+        }
+
+        public Dictionary<int, List<int>> GetAllTensesConjugationRules()
+        {
+            var allTensesConjugaitonRules = new Dictionary<int, List<int>>();
+
+            var conjugationRules = GetItemList<ConjugationRule>();
+
+            foreach (var conjugationRule in conjugationRules)
+            {
+                var tenseId = conjugationRule.TenseId;
+                var conjugationRuleId = conjugationRule.Id;
+
+                if (allTensesConjugaitonRules.ContainsKey(tenseId))
+                    allTensesConjugaitonRules[tenseId].Add(conjugationRuleId);
+                else
+                    allTensesConjugaitonRules.Add(tenseId, new List<int> { conjugationRuleId });
+            }
+
+            return allTensesConjugaitonRules;
         }
 
         #endregion
@@ -224,7 +275,7 @@ namespace NotaDAL.Context
             return table.Cast<T>()
                         .Select(item => item)
                         .ToList();
-        }
+        }        
 
         public List<T> GetItemList<T>(Func<T, bool> predicate)
         {
@@ -233,7 +284,7 @@ namespace NotaDAL.Context
 
             return allItems.Where<T>(predicate)
                            .ToList();
-        }
+        }        
 
         public T AddItem<T>(T item, bool submit = true) where T : NotaDbObject<T>
         {
@@ -274,18 +325,7 @@ namespace NotaDAL.Context
             }
 
             return dbItem;            
-        }
-
-        public ConjugationMatch CreateConjugationMatch(int VerbId, int conjugationRuleId, int? personId, string ConjugationString)
-        {
-            return new ConjugationMatch
-            {
-                VerbId = VerbId,
-                ConjugationRuleId = conjugationRuleId,
-                PersonId = personId,
-                ConjugationString = ConjugationString
-            };
-        }
+        }       
 
         public List<T> AddItems<T>(List<T> items) where T : NotaDbObject<T>
         {

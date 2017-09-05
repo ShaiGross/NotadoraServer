@@ -16,8 +16,7 @@ namespace NotaAPI.Controllers
     {
         [Route("")]
         public List<TenseInfo> GetTenses()
-        {
-            Console.WriteLine("Requested tenses");
+        {            
             return DataAccess.GetTenses();
         }
     }

@@ -30,5 +30,26 @@ namespace NotaAPI.Controllers
         {
             return DataAccess.AddNewVerb(spanishInfinative);
         }
+
+        [Route("conjMatches/{id:int}")]
+        [HttpGet]
+        public List<ConjugationMatchInfo> GetVerbConjugationMatches(int id)
+        {
+            return DataAccess.GetVerbConjugationMatches(id);
+        }
+
+        [Route("conjMatches/{verbId:int}/{tenseId:int}/{personId:int}")]
+        [HttpGet]
+        public List<ConjugationMatchInfo> GetVerbConjugationMatches(int verbId, int tenseId, int personId)
+        {
+            return DataAccess.GetVerbConjugationMatches(verbId, tenseId, personId);
+        }
+
+        [Route("conjMatches/{verbId:int}/{tenseId:int}/{personId:int}/{conjugationRuleId:int}")]
+        [HttpGet]
+        public ConjugationMatchInfo GetVerbConjugationMatch(int verbId, int tenseId, int personId, int conjugationRuleId)
+        {
+            return DataAccess.GetVerbConjugationMatch(verbId, tenseId, personId, conjugationRuleId);
+        }
     }
 }

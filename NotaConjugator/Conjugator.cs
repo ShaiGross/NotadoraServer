@@ -148,13 +148,13 @@ namespace NotaConjugator
                 return false;
 
             
-            var conjugationMatch = context.getConjugationMatch(tenseId, verbId, personId);
+            var conjugationMatch = context.GetConjugationMatch(tenseId, verbId, personId);
             
 
             if (conjugationMatch == null)
                 return false;
 
-            var conjugationRule = context.getConjugationMatchConjugationRule(conjugationMatch);            
+            var conjugationRule = context.GetConjugationMatchConjugationRule(conjugationMatch);            
 
             if (conjugationRule == null)
                 return false;
@@ -189,7 +189,7 @@ namespace NotaConjugator
             ConjugationMatch conjugationMatch;
             lock (_lock)
             {
-                conjugationMatch = context.getConjugationMatch(tenseId, verbId, personId);
+                conjugationMatch = context.GetConjugationMatch(tenseId, verbId, personId);
             }
 
             if (conjugationMatch == null)
@@ -198,7 +198,7 @@ namespace NotaConjugator
             ConjugationRule conjugationRule;
             lock (_lock)
             {
-                conjugationRule = context.getConjugationMatchConjugationRule(conjugationMatch);
+                conjugationRule = context.GetConjugationMatchConjugationRule(conjugationMatch);
             }
 
             if (conjugationRule == null)

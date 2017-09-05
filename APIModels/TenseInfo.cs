@@ -38,14 +38,14 @@ namespace APIModels
                          ,string name
                          ,string desc
                          ,int regularConjRuleId
-                         //,List<int> irregularConjRulesIds
+                         ,List<int> irregularConjRulesIds = null
                          /*,List<int> personsIds*/)
         {
             this.id = id;
             this.name = name;
             this.description = desc;
             this.rugularConjugationRuleId = regularConjRuleId;
-            //this.irregularConjugationRulesIds = irregularConjRulesIds;
+            this.irregularConjugationRulesIds = irregularConjRulesIds;
             //this.personsIds = personsIds;            
         }
 

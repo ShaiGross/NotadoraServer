@@ -60,6 +60,74 @@ namespace NotaBL
             return verbs;
         }
 
+        public static List<ConjugationMatchInfo> GetVerbConjugationMatches(int verbId, int tenseId, int personId)
+        {
+            var conjugationMatches = new List<ConjugationMatchInfo>();
+            using (var context = new NotaContextAcces())
+            {
+                var dbConjugaitonMatches = context.GetItemList<ConjugationMatch>(cm => cm.VerbId == verbId
+                                                                                     && new List<int?> { personId, null }.Contains(cm.PersonId));
+                foreach (var dbConjugationMatch in dbConjugaitonMatches)
+                {
+                    var conjugationMatch = new ConjugationMatchInfo(dbConjugationMatch);
+                    conjugationMatches.Add(conjugationMatch);
+                }
+            }
+
+            return conjugationMatches;
+        }
+
+        public static ConjugationMatchInfo GetVerbConjugationMatch(int verbId, int tenseId, int personId, int conjugationRuleId)
+        {
+            using (var context = new NotaContextAcces())
+            {
+                var dbConjugaitonMatch = context.GetItemList<ConjugationMatch>(cm => cm.ConjugationRuleId == conjugationRuleId
+                                                                                       && cm.VerbId == verbId
+                                                                                       && new List<int?> { personId, null }.Contains(cm.PersonId))
+                                                .First();
+
+
+                if (dbConjugaitonMatch == null)
+                    return null;
+
+                return new ConjugationMatchInfo(dbConjugaitonMatch);
+            }
+        }
+
+        public static List<ConjugationMatchInfo> GetVerbConjugationMatches(int verbId)
+        {
+            var matches = new List<ConjugationMatchInfo>();
+            using (var context = new NotaContextAcces())
+            {
+                var dbMatches = context.GetItemList<ConjugationMatch>(cm => cm.VerbId == verbId);
+
+                foreach (var dbMatch in dbMatches)
+                {
+                    var currMatch = new ConjugationMatchInfo(dbMatch);
+                    matches.Add(currMatch);
+                }
+            }
+
+            return matches;
+        }
+
+        public static List<InstructionInfo> GetConjugationRulesInstructions()
+        {
+            var instructions = new List<InstructionInfo>();
+            using (var context = new NotaContextAcces())
+            {
+                var dbInstructions = context.GetItemList<ConjugationRulesInstruction>();
+
+                foreach (var dbInstruction in dbInstructions)
+                {
+                    var currInstruction = new InstructionInfo(dbInstruction);
+                    instructions.Add(currInstruction);
+                }
+            }
+
+            return instructions;
+        }
+
         public static VerbInfo AddNewVerb(string spanishInfinative)
         {
             var conjugationHTML = ConjugationsReader.DownloadConjugationsHTML(spanishInfinative);
@@ -166,17 +234,20 @@ namespace NotaBL
             using (var context = new NotaContextAcces())
             {
                 var dbConjugationRules = context.GetItemList<ConjugationRule>();
+                var allConjugaitonRulesPersonIds = context.GetAllConjugationRulePersonIds();
 
                 foreach (var dbConjugationRule in dbConjugationRules)
-                {                    
+                {
+                    var conjugationRulePersonIds = allConjugaitonRulesPersonIds[dbConjugationRule.Id];
+
                     var conjugationRule = new ConjugationRuleInfo(dbConjugationRule.Id
                                                                   ,dbConjugationRule.Name
                                                                   ,dbConjugationRule.Description
                                                                   ,dbConjugationRule.TenseId
                                                                   ,dbConjugationRule.IsRegular
                                                                   ,dbConjugationRule.Type
-                                                                  ,dbConjugationRule.PatternIndex);
-
+                                                                  ,dbConjugationRule.PatternIndex
+                                                                  ,conjugationRulePersonIds);
                     conjugationRules.Add(conjugationRule);
                 }
             }
@@ -216,23 +287,17 @@ namespace NotaBL
             {
                 var dbTenses = context.GetItemList<Tense>(t => t.Enabled);
                 var conjugator = new Conjugator(context);
+                Dictionary<int, List<int>> allTensesConjugationRulesIds = context.GetAllTensesConjugationRules();
 
                 foreach (var dbTense in dbTenses)
                 {
-                    //var irregularConjugationRulesIds = context.GetTenseIrregularConjugationRules(dbTense)
-                    //                                          .Select(cr => cr.Id)
-                    //                                          .ToList();
-
-                    //var tensePersonsIds = context.GetAllTensePersons(dbTense.Id)
-                    //                             .Select(p => p.Id)
-                    //                             .ToList();
+                    var irregularConjugationRulesIds = allTensesConjugationRulesIds[dbTense.Id];
 
                     var tense = new TenseInfo(dbTense.Id
-                                              , dbTense.Name
-                                              , dbTense.Description
-                                              , dbTense.RugularConjugationRuleId
-                                              //,irregularConjugationRulesIds
-                                              /*,tensePersonsIds*/);
+                                              ,dbTense.Name
+                                              ,dbTense.Description
+                                              ,dbTense.RugularConjugationRuleId
+                                              ,irregularConjugationRulesIds);
                     tenses.Add(tense);
                 }
             }
