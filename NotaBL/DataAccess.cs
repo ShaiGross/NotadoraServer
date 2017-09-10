@@ -286,18 +286,20 @@ namespace NotaBL
             using (var context = new NotaContextAcces())
             {
                 var dbTenses = context.GetItemList<Tense>(t => t.Enabled);
-                var conjugator = new Conjugator(context);
-                Dictionary<int, List<int>> allTensesConjugationRulesIds = context.GetAllTensesConjugationRules();
+                var allTensesConjugationRulesIds = context.GetAllTensesConjugationRules();
+                var allTensesPersonIds = context.GetAllTensePersonsIds();
 
                 foreach (var dbTense in dbTenses)
                 {
                     var irregularConjugationRulesIds = allTensesConjugationRulesIds[dbTense.Id];
+                    var personIds = allTensesPersonIds[dbTense.Id];
 
                     var tense = new TenseInfo(dbTense.Id
                                               ,dbTense.Name
                                               ,dbTense.Description
                                               ,dbTense.RugularConjugationRuleId
-                                              ,irregularConjugationRulesIds);
+                                              ,irregularConjugationRulesIds
+                                              ,personIds);
                     tenses.Add(tense);
                 }
             }

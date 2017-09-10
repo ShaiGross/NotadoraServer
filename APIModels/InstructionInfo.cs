@@ -20,7 +20,7 @@ namespace APIModels
         private int conjugationRuleId;
 
         [DataMember]
-        private int PersonId;
+        private int personId;
 
         [DataMember]
         private VerbType verbType;
@@ -36,7 +36,7 @@ namespace APIModels
         {
             this.id = instruction.Id;
             this.conjugationRuleId = instruction.ConjugationRuleId;
-            this.PersonId  = instruction.PersonId;
+            this.personId  = instruction.PersonId;
             this.verbType = instruction.VerbType;
             this.suffix = instruction.Suffix;
         }

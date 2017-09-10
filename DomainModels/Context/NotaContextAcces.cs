@@ -106,9 +106,12 @@ namespace NotaDAL.Context
             return tense.IrregularConjugationRules;
         }
 
-        public Dictionary<int, List<int>> GetAllTensePersonsIds(List<int> tenseIds)
+        public Dictionary<int, List<int>> GetAllTensePersonsIds(List<int> tenseIds = null)
         {
             var tensesPersonsIds = new Dictionary<int, List<int>>();
+
+            if (tenseIds == null)
+                tenseIds = GetItemList<Tense>().Select(t => t.Id).ToList();
 
             foreach (var tenseId in tenseIds)
             {
@@ -116,7 +119,6 @@ namespace NotaDAL.Context
                                        .Where(tp => tp.TenseId == tenseId)
                                        .Select(tp => tp.PersonId).ToList();
                 tensesPersonsIds.Add(tenseId, personIds);
-
             }
 
             return tensesPersonsIds;
